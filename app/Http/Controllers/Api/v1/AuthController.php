@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Events\UserCreated;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -9,10 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Контроллер для предоставлиния Api
+ * для регистрации и авторизации
+ */
 class AuthController extends Controller
 {
     /**
-     * Api для регистрации на сайте
+     * Метод для регистрации на сайте
      *
      * @param Request $request
      * @return JsonResponse
@@ -27,13 +32,15 @@ class AuthController extends Controller
             'submit' => 'accepted'
         ]);
 
-        User::create($request->all());
+        $user = User::create($request->all());
+
+        UserCreated::dispatch($user);
 
         return response()->json(['status' => 'success']);
     }
 
     /**
-     * Api для автоирзации на сайте
+     * Метод для автоирзации на сайте
      *
      * @param Request $request
      * @return JsonResponse
@@ -59,13 +66,23 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Метод для получение данных о пользователе после авторизации
+     *
+     * @return JsonResponse
+     */
     public function auth_user(): JsonResponse
     {
         return response()->json([
-            'user' => Auth::user()
+            'user' => User::with(['profile', 'avatar'])->find(Auth::id())
         ]);
     }
 
+    /**
+     * Метод выхода из приложения
+     *
+     * @return JsonResponse
+     */
     public function logout(): JsonResponse
     {
         Auth::user()->currentAccessToken()->delete();
