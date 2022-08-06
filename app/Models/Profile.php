@@ -33,21 +33,15 @@ class Profile extends Model
     ];
 
     /**
-     * Шифруем пароль при сохранении
+     * Обрабатываем дату при сохранении
      *
      * @return Attribute
      */
     protected function birthdate(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
-                $date = strtotime($value);
-                return date('d.m.Y', $date);
-            },
-            set: function ($value) {
-                $date = strtotime($value);
-                return date('Y-m-d', $date);
-            },
+            get: fn ($value) => date('d.m.Y', strtotime($value)),
+            set: fn ($value) => date('Y-m-d', strtotime($value)),
         );
     }
 }
