@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Listeners\CreateSearch;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 use App\Events\UserCreated;
+use App\Events\ProfileUpdated;
 use App\Listeners\CreateProfile;
 use App\Listeners\CreateAvatar;
+use App\Listeners\UpdateSearch;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -20,7 +22,11 @@ class EventServiceProvider extends ServiceProvider
         UserCreated::class => [
             CreateProfile::class,
             CreateAvatar::class,
+            CreateSearch::class
         ],
+        ProfileUpdated::class => [
+            UpdateSearch::class
+        ]
     ];
 
     /**

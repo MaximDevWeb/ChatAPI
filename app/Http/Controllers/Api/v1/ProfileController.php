@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Events\ProfileUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +28,9 @@ class ProfileController extends Controller
         ]);
 
         $profile = Profile::where('user_id', Auth::id())->first();
-
         $profile->update($request->all());
+
+        ProfileUpdated::dispatch($profile);
 
         return response()->json([
             'status' => 'success',

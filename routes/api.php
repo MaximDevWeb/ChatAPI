@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\AvatarController;
 use App\Http\Controllers\Api\v1\ProfileController;
+use App\Http\Controllers\Api\v1\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,4 +28,6 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function() {
 
     Route::post('/user/avatar', [AvatarController::class, 'update']);
     Route::post('/user/profile', [ProfileController::class, 'update']);
+
+    Route::post('/users/search', [UserController::class, 'index']);
 });
