@@ -7,9 +7,11 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 
 use App\Events\UserCreated;
 use App\Events\ProfileUpdated;
+use App\Events\ContactCreated;
 use App\Listeners\CreateProfile;
 use App\Listeners\CreateAvatar;
 use App\Listeners\UpdateSearch;
+use App\Listeners\CreateEvent;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ProfileUpdated::class => [
             UpdateSearch::class
+        ],
+        ContactCreated::class => [
+            CreateEvent::class,
         ]
     ];
 

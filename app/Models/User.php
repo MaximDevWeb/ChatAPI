@@ -77,12 +77,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(Search::class);
     }
-
-    public function scopeSearch($query, $search='') {
-        return $query->where('login', 'LIKE', '%' . $search . '%')
-            ->orWhereHas('profile', function ($query) use ($search) {
-                $query->where('first_name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('last_name', 'LIKE', '%' . $search . '%');
-            });
-    }
 }
