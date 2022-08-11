@@ -23,9 +23,9 @@ class ContactCreated implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($message, $contact_id)
+    public function __construct($login, $contact_id)
     {
-        $this->message = $message;
+        $this->message = "Пользователь $login добавил Вас в Контакты";
         $this->contact_id = $contact_id;
     }
 

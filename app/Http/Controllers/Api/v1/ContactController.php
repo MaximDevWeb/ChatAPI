@@ -6,6 +6,7 @@ use App\Events\ContactCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Contact;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,19 +25,27 @@ class ContactController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'contact_id' => 'integer'
         ]);
 
-        $message = 'Пользователь ' . Auth::user()->login . ' добавил Вас в контакты';
-        broadcast(new ContactCreated($message, $request->get('contact_id')))->toOthers();
+        Auth::user()->contacts()->create($request->all());
 
-        //$contact = Contact::create($request->all());
+        broadcast(
+            new ContactCreated(
+                Auth::user()->login,
+                $request->get('contact_id')
+            )
+        )->toOthers();
+
+        return response()->json([
+            'status' => 'success',
+        ]);
     }
 
     /**
@@ -53,7 +62,7 @@ class ContactController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
