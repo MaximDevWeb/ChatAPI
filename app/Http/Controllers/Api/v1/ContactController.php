@@ -4,22 +4,33 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Events\ContactCreated;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ContactResourse;
 use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class ContactController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        $contacts = Auth::user()
+            ->contacts()
+            ->with('contact_user')
+            ->with('contact_user.avatar')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'contacts' => ContactResourse::collection($contacts)
+        ]);
     }
 
     /**
@@ -49,36 +60,26 @@ class ContactController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return JsonResponse
+     * @throws ValidationException
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
-        //
+        $contact = Contact::find($id);
+
+        if ($contact->user_id === Auth::id()) {
+            $contact->delete();
+
+            return response()->json([
+                'status' => 'success',
+            ]);
+        }
+
+        throw ValidationException::withMessages([
+            'delete' => ['Это не ваш контакт'],
+        ]);
     }
 }

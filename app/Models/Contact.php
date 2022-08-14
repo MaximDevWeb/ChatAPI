@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Contact extends Model
 {
@@ -18,4 +19,14 @@ class Contact extends Model
         'user_id',
         'contact_id'
     ];
+
+    /**
+     * Отношение к контакту пользователя
+     *
+     * @return HasOne
+     */
+    public function contact_user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'contact_id');
+    }
 }
