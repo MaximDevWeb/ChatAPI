@@ -18,7 +18,7 @@ class ContactResourse extends JsonResource
             'id' => $this->id,
             'contact_id' => $this->contact_id,
             'login' => $this->contact_user->login,
-            'full_name' => $this->contact_user->profile->first_name . ' ' . $this->contact_user->profile->last_name,
+            'full_name' => trim($this->contact_user->profile->first_name . ' ' . $this->contact_user->profile->last_name),
             'avatar' => $this->contact_user->avatar->link
         ];
     }

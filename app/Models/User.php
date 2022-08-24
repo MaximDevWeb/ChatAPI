@@ -88,4 +88,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Contact::class);
     }
+
+    /**
+     * Отношение к чатам пользователя
+     *
+     * @return HasMany
+     */
+    public function chats(): HasMany
+    {
+        return $this->hasMany(ChatUser::class);
+    }
 }
