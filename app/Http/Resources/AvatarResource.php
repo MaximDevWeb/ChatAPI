@@ -15,7 +15,7 @@ class AvatarResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'link' => $this->link
+            'link' => $this->link,
         ];
     }
 }

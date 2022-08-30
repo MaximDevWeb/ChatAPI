@@ -16,12 +16,12 @@ class AvatarFactory extends Factory
      */
     public function definition()
     {
-        $num = rand(1,14);
+        $num = rand(1, 14);
 
         return [
             'type' => 1,
             'path' => "/avatars/default/avatar_$num.svg",
-            'link' => "https://chat_cloud.hb.bizmrg.com/avatars/default/avatar_$num.svg"
+            'link' => "https://chat_cloud.hb.bizmrg.com/avatars/default/avatar_$num.svg",
         ];
     }
 }

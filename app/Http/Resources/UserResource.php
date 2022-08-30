@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'login' => $this->login,
             'avatar' => AvatarResource::make($this->avatar),
-            'profile' => ProfileResource::make($this->profile)
+            'profile' => ProfileResource::make($this->profile),
         ];
     }
 }

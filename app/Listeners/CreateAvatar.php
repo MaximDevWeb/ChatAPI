@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Events\UserCreated;
 use App\Models\Avatar;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Storage;
 
 class CreateAvatar
@@ -28,7 +26,7 @@ class CreateAvatar
      */
     public function handle(UserCreated $event)
     {
-        $num_avatar = rand(1,14);
+        $num_avatar = rand(1, 14);
         $path = "/avatars/default/avatar_$num_avatar.svg";
         $link = Storage::url($path);
 
@@ -36,7 +34,7 @@ class CreateAvatar
             'user_id' => $event->user->id,
             'type' => Avatar::$DEFAULT_TYPE,
             'path' => $path,
-            'link' => $link
+            'link' => $link,
         ];
 
         Avatar::create($avatar);

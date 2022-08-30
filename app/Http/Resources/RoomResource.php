@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ContactResourse extends JsonResource
+class RoomResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,10 @@ class ContactResourse extends JsonResource
     {
         return [
             'id' => $this->id,
-            'contact_id' => $this->contact_id,
-            'login' => $this->contact_user->login,
-            'full_name' => trim($this->contact_user->profile->first_name.' '.$this->contact_user->profile->last_name),
-            'avatar' => $this->contact_user->avatar->link,
+            'name' => $this->name,
+            'avatar' => $this->avatar,
+            'type' => $this->type,
+            'participants' => ParticipantResource::collection($this->whenLoaded('participants')),
         ];
     }
 }

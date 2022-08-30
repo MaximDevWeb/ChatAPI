@@ -17,6 +17,7 @@ class Event extends Model
      * @var int
      */
     public static int $CONTACT_TYPE = 1;
+
     public static int $CHAT_TYPE = 2;
 
     /**
@@ -27,6 +28,7 @@ class Event extends Model
      * @var int
      */
     public static int $NEW_STATUS = 1;
+
     public static int $VIEW_STATUS = 2;
 
     /**
@@ -38,6 +40,6 @@ class Event extends Model
         'user_id',
         'event_user_id',
         'type',
-        'status'
+        'status',
     ];
 }

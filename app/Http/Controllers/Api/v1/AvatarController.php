@@ -35,7 +35,7 @@ class AvatarController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'avatar_link' => $link
+            'avatar_link' => $link,
         ]);
     }
 }

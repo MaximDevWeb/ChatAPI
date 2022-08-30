@@ -26,7 +26,7 @@ class UpdateSearch
     public function handle(ProfileUpdated $event)
     {
         $search = [
-            'full_name' => $event->profile->first_name . ' ' . $event->profile->last_name
+            'full_name' => $event->profile->first_name.' '.$event->profile->last_name,
         ];
 
         Search::where('user_id', $event->profile->user_id)->update($search);

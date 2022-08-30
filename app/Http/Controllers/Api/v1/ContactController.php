@@ -6,7 +6,6 @@ use App\Events\ContactCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ContactResourse;
 use App\Models\Contact;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,20 +28,20 @@ class ContactController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'contacts' => ContactResourse::collection($contacts)
+            'contacts' => ContactResourse::collection($contacts),
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'contact_id' => 'integer'
+            'contact_id' => 'integer',
         ]);
 
         Auth::user()->contacts()->create($request->all());
@@ -62,8 +61,9 @@ class ContactController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param  int  $id
      * @return JsonResponse
+     *
      * @throws ValidationException
      */
     public function destroy(int $id): JsonResponse

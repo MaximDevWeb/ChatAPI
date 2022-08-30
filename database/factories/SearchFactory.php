@@ -18,7 +18,7 @@ class SearchFactory extends Factory
     {
         return [
             'login' => '',
-            'full_name' => ''
+            'full_name' => '',
         ];
     }
 }

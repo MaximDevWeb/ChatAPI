@@ -3,10 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\UserCreated;
-use App\Models\Profile;
 use App\Models\Search;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class CreateSearch
 {

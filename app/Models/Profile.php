@@ -33,6 +33,25 @@ class Profile extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['full_name'];
+
+    /**
+     * Полное имя
+     *
+     * @return Attribute
+     */
+    protected function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => trim($attributes['first_name'].' '.$attributes['last_name']),
+        );
+    }
+
+    /**
      * Обрабатываем дату при сохранении
      *
      * @return Attribute

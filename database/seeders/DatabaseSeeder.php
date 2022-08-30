@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         User::factory(3000)
+        User::factory(3000)
              ->has(Profile::factory())
              ->has(Avatar::factory())
              ->has(Search::factory()
@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
                     function (array $attributes, User $user) {
                         return [
                             'login' => $user->login,
-                            'full_name' => $user->profile->first_name . ' ' . $user->profile->last_name
+                            'full_name' => $user->profile->first_name.' '.$user->profile->last_name,
                         ];
                     }
                 )

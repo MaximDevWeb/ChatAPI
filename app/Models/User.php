@@ -34,7 +34,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'updated_at'
+        'updated_at',
     ];
 
     /**
@@ -87,15 +87,5 @@ class User extends Authenticatable
     public function contacts(): HasMany
     {
         return $this->hasMany(Contact::class);
-    }
-
-    /**
-     * Отношение к чатам пользователя
-     *
-     * @return HasMany
-     */
-    public function chats(): HasMany
-    {
-        return $this->hasMany(ChatUser::class);
     }
 }

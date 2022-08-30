@@ -17,6 +17,7 @@ class Avatar extends Model
      * @var int
      */
     public static int $DEFAULT_TYPE = 1;
+
     public static int $CUSTOM_TYPE = 2;
 
     /**

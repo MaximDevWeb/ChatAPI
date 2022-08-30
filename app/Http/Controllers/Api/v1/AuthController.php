@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Events\UserCreated;
-use App\Events\ProfileUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +19,7 @@ class AuthController extends Controller
     /**
      * Метод для регистрации на сайте
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function create(Request $request): JsonResponse
@@ -30,7 +29,7 @@ class AuthController extends Controller
             'email' => 'required|unique:users,email',
             'password' => 'required|confirmed',
             'password_confirmation' => 'required',
-            'submit' => 'accepted'
+            'submit' => 'accepted',
         ]);
 
         $user = User::create($request->all());
@@ -43,8 +42,9 @@ class AuthController extends Controller
     /**
      * Метод для автоирзации на сайте
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
+     *
      * @throws ValidationException
      */
     public function login(Request $request): JsonResponse
@@ -58,7 +58,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             return response()->json([
-                'token' => $user->createToken('auth')->plainTextToken
+                'token' => $user->createToken('auth')->plainTextToken,
             ]);
         }
 
@@ -75,7 +75,7 @@ class AuthController extends Controller
     public function auth_user(): JsonResponse
     {
         return response()->json([
-            'user' => User::with(['profile', 'avatar'])->find(Auth::id())
+            'user' => User::with(['profile', 'avatar'])->find(Auth::id()),
         ]);
     }
 
