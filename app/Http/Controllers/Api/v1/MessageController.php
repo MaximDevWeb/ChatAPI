@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Events\MessageCreated;
+use App\Events\MessageDeleted;
+use App\Events\MessageUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
@@ -19,7 +22,7 @@ class MessageController extends Controller
      */
     public function index(int $room_id): JsonResponse
     {
-        $messages = Message::where('room_id', $room_id)->get();
+        $messages = Message::where('room_id', $room_id)->orderBy('created_at', 'ASC')->get();
 
         return response()->json([
             'status' => 'success',
@@ -46,9 +49,12 @@ class MessageController extends Controller
         $message->room_id = $room_id;
         $message->save();
 
+        broadcast(new MessageCreated(
+            new MessageResource($message)
+        ));
+
         return response()->json([
-            'status' => 'success',
-            'message' => new MessageResource($message),
+            'status' => 'success'
         ]);
     }
 
@@ -70,6 +76,10 @@ class MessageController extends Controller
         $message->text = $request->text;
         $message->save();
 
+        broadcast(new MessageUpdated(
+            new MessageResource($message)
+        ));
+
         return response()->json([
             'status' => 'success',
             'message' => new MessageResource($message),
@@ -87,6 +97,8 @@ class MessageController extends Controller
     {
         $message = Message::find($id);
         $message->delete();
+
+        broadcast(new MessageDeleted($room_id, $id));
 
         return response()->json([
             'status' => 'success',

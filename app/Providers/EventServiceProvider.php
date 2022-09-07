@@ -5,6 +5,9 @@ namespace App\Providers;
 use App\Events\ContactCreated;
 use App\Events\ProfileUpdated;
 use App\Events\UserCreated;
+use App\Events\MessageCreated;
+use App\Events\MessageDeleted;
+use App\Events\MessageUpdated;
 use App\Listeners\CreateAvatar;
 use App\Listeners\CreateEvent;
 use App\Listeners\CreateProfile;
@@ -31,6 +34,9 @@ class EventServiceProvider extends ServiceProvider
         ContactCreated::class => [
             CreateEvent::class,
         ],
+        MessageCreated::class => [],
+        MessageDeleted::class => [],
+        MessageUpdated::class => []
     ];
 
     /**

@@ -15,6 +15,7 @@ class MessageUserResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'full_name' => $this->profile->full_name ?: $this->login,
             'avatar' => $this->avatar->link,
         ];
