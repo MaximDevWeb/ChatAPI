@@ -14,32 +14,32 @@ class Room extends Model
 
     protected function avatar(): Attribute
     {
-        return Attribute::make(
-            get: function () {
-                if ($this->type === 'group') {
-                    return $this->avatar_link;
-                } else {
-                    $participant = $this->participants()->where('user_id', '<>', Auth::id())->first();
+        return Attribute::get(function () {
+            if ($this->type === 'group') {
+                return $this->avatar_link;
+            } else {
+                $participant = $this->participants()
+                    ->where('user_id', '<>', Auth::id())
+                    ->first();
 
-                    return  $participant->user->avatar->link;
-                }
+                return $participant->user->avatar->link;
             }
-        );
+        });
     }
 
     protected function name(): Attribute
     {
-        return Attribute::make(
-            get: function ($value) {
-                if ($this->type === 'group') {
-                    return $value;
-                } else {
-                    $participant = $this->participants()->where('user_id', '<>', Auth::id())->first();
+        return Attribute::get(function ($value) {
+            if ($this->type === 'group') {
+                return $value;
+            } else {
+                $participant = $this->participants()
+                    ->where('user_id', '<>', Auth::id())
+                    ->first();
 
-                    return  $participant->user->profile->full_name ?: $participant->user->login;
-                }
+                return $participant->user->profile->full_name ?: $participant->user->login;
             }
-        );
+        });
     }
 
     public function participants(): HasMany

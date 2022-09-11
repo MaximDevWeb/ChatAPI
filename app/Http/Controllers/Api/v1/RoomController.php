@@ -9,6 +9,7 @@ use App\Models\Room;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class RoomController extends Controller
@@ -41,25 +42,50 @@ class RoomController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Получаем чат с твыбранным контактом,
+     * если такого нет создаем новый.
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+
+    public function getOrStorePersonal(Request $request): JsonResponse
     {
-        $request->validate([
-            'participants' => 'required|array',
-            'name' => 'string',
-            'avatar' => 'file',
+        $room = Room::with('participants')
+            ->where('type', 'personal')
+            ->whereIn('id', Participant::select('room_id')
+                ->where('user_id', $request->id)
+                ->whereIN('room_id', Participant::select('room_id')
+                    ->where('user_id', Auth::id())))
+            ->first();
+
+        if (!$room) {
+            $room = $this->store([$request->id]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'room' => new RoomResource($room),
         ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param $participants
+     * @param null $name
+     * @param null $avatar
+     * @return Room
+     */
+    private function store($participants, $name = null,  $avatar = null): Room
+    {
 
         $room = new Room();
-        $room->type = count($request->participants) > 1 ? 'group' : 'personal';
-        $room->name = $request->name ?: '';
+        $room->type = count($participants) > 1 ? 'group' : 'personal';
+        $room->name = $name ?: '';
 
-        if ($request->file('avatar')) {
-            $path = $request->file('avatar')->storePublicly('avatars/custom');
+        if ($avatar) {
+            $path = $avatar->file('avatar')->storePublicly('avatars/custom');
             $link = Storage::url($path);
 
             $room->avatar_path = $path;
@@ -68,7 +94,6 @@ class RoomController extends Controller
 
         $room->save();
 
-        $participants = $request->participants;
         $participants[] = Auth::id();
 
         foreach ($participants as $item) {
@@ -78,9 +103,6 @@ class RoomController extends Controller
             $participant->save();
         }
 
-        return response()->json([
-            'status' => 'success',
-            'room' => new RoomResource($room),
-        ]);
+        return $room;
     }
 }

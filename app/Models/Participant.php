@@ -14,4 +14,9 @@ class Participant extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function room(): BelongsTo
+    {
+        return $this->belongsTo(Room::class);
+    }
 }
