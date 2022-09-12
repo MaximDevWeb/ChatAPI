@@ -51,6 +51,10 @@ class RoomController extends Controller
 
     public function getOrStorePersonal(Request $request): JsonResponse
     {
+        $request->validate([
+            'id' => 'integer|required'
+        ]);
+
         $room = Room::with('participants')
             ->where('type', 'personal')
             ->whereIn('id', Participant::select('room_id')
@@ -62,6 +66,31 @@ class RoomController extends Controller
         if (!$room) {
             $room = $this->store([$request->id]);
         }
+
+        return response()->json([
+            'status' => 'success',
+            'room' => new RoomResource($room),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+
+    public function storeGroup(Request $request): JsonResponse
+    {
+        $request->validate([
+            'name' => 'string|required',
+            'avatar' => 'file|required',
+            'participants' => 'array|required'
+        ]);
+
+        $room = $this->store(
+            $request->participants,
+            $request->name,
+            $request->file('avatar')
+        );
 
         return response()->json([
             'status' => 'success',
@@ -85,7 +114,7 @@ class RoomController extends Controller
         $room->name = $name ?: '';
 
         if ($avatar) {
-            $path = $avatar->file('avatar')->storePublicly('avatars/custom');
+            $path = $avatar->storePublicly('avatars/custom');
             $link = Storage::url($path);
 
             $room->avatar_path = $path;

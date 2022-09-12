@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     Route::get('/chat/rooms/my', [RoomController::class, 'myRooms']);
     Route::post('/chat/rooms/add-personal', [RoomController::class, 'getOrStorePersonal']);
+    Route::post('/chat/rooms/add-group', [RoomController::class, 'storeGroup']);
     Route::get('/chat/room/{room_id}', [RoomController::class, 'room'])->middleware('room.user');
 
     Route::resource('/chat/room/{room_id}/messages', MessageController::class)
