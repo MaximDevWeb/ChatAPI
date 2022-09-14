@@ -12,6 +12,13 @@ class Room extends Model
 {
     use HasFactory;
 
+    protected function createdAt(): Attribute
+    {
+        return Attribute::get(function($value) {
+            return date('d.m.Y', strtotime($value));
+        });
+    }
+
     protected function avatar(): Attribute
     {
         return Attribute::get(function () {

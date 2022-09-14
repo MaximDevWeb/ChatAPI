@@ -19,7 +19,8 @@ class RoomResource extends JsonResource
             'name' => $this->name,
             'avatar' => $this->avatar,
             'type' => $this->type,
-            'participants' => ParticipantResource::collection($this->whenLoaded('participants')),
+            'created_at' => $this->created_at,
+            'participants' => ParticipantResource::collection($this->participants)
         ];
     }
 }
