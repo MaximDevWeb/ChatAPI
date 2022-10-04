@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MessageResource extends JsonResource
+class FileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,13 +15,14 @@ class MessageResource extends JsonResource
      */
     public function toArray($request): array
     {
+        $info = pathinfo($this->link);
+
         return [
             'id' => $this->id,
-            'user' => new MessageUserResource($this->user),
-            'type' => $this->type,
-            'text' => $this->text,
-            'file' => new FileResource($this->file),
-            'created_at' => $this->created_at,
+            'original_name' => $this->original_name,
+            'extension' => $info['extension'],
+            'preview' => 'https://ik.imagekit.io/ipn6vplwc/tr:w-600/' . $info['basename'],
+            'link' => $this->link
         ];
     }
 }

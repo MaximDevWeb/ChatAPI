@@ -11,6 +11,7 @@ use App\Models\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MessageController extends Controller
 {
@@ -22,7 +23,7 @@ class MessageController extends Controller
      */
     public function index(int $room_id): JsonResponse
     {
-        $messages = Message::where('room_id', $room_id)->orderBy('created_at', 'ASC')->get();
+        $messages = Message::where('room_id', $room_id)->with('file')->orderBy('created_at', 'ASC')->get();
 
         return response()->json([
             'status' => 'success',
@@ -40,13 +41,15 @@ class MessageController extends Controller
     public function store(int $room_id, Request $request): JsonResponse
     {
         $request->validate([
-            'text' => 'required|string',
+            'text' => 'string',
         ]);
 
         $message = new Message();
         $message->text = $request->text;
+        $message->type = $request->type ?? 'TEXT';
         $message->user_id = Auth::id();
         $message->room_id = $room_id;
+        $message->file_id = $request->file_id;
         $message->save();
 
         broadcast(new MessageCreated(
@@ -96,6 +99,13 @@ class MessageController extends Controller
     public function destroy(int $room_id, int $id): JsonResponse
     {
         $message = Message::find($id);
+        $file = $message->file;
+
+        if ($file) {
+            Storage::delete($file->path);
+            $file->delete();
+        }
+
         $message->delete();
 
         broadcast(new MessageDeleted($room_id, $id));

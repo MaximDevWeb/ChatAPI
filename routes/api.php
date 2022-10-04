@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\AvatarController;
 use App\Http\Controllers\Api\v1\ContactController;
+use App\Http\Controllers\Api\v1\FileController;
 use App\Http\Controllers\Api\v1\MessageController;
 use App\Http\Controllers\Api\v1\ParticipantsController;
 use App\Http\Controllers\Api\v1\ProfileController;
@@ -47,4 +48,6 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     Route::resource('/chat/room/{room_id}/participants', ParticipantsController::class)
         ->middleware(['room.user']);
+
+    Route::resource('/chat/files', FileController::class);
 });
