@@ -23,11 +23,14 @@ class MessageController extends Controller
      */
     public function index(int $room_id): JsonResponse
     {
-        $messages = Message::where('room_id', $room_id)->with('file')->orderBy('created_at', 'ASC')->get();
+        $messages = Message::where('room_id', $room_id)
+            ->with('file')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(20);
 
         return response()->json([
             'status' => 'success',
-            'messages' => MessageResource::collection($messages),
+            'messages' => MessageResource::collection($messages)->response()->getData(true),
         ]);
     }
 
